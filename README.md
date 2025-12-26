@@ -1,33 +1,59 @@
-MusicStreamingApp - Full Stack Deployment Guide
-A complete music streaming application with React frontend and Spring Boot backend. This guide covers local development, Docker containerization, and Kubernetes deployment with Ansible automation.
+# 🎵 MusicStreamingApp — Full Stack Deployment Guide
 
-Project Structure
+A full-stack **music streaming application** built with a **React (Vite) frontend** and a **Spring Boot backend**.  
+This project supports **local development**, **Docker Compose**, and **production-grade Kubernetes deployment**, automated with **Ansible**.
+
+---
+
+## 📁 Project Structure
+
+```text
 Music/
- MusicBackend-main/           # Spring Boot Backend
-    MusicBackend-main/
-        pom.xml
-        src/
-        mvnw.cmd
- TuneUp-frontEnd-main/        # React/Vite Frontend
-     TuneUp-frontEnd-main/
-         package.json
-         vite.config.js
-         Dockerfile
-         src/
-Part 1: Local Development Setup
-Prerequisites
-Backend: Java 17+, Maven (or use mvnw wrapper)
-Frontend: Node.js 18+, npm
-Docker: Docker Desktop (for containerization)
-Kubernetes: kubectl, Kubernetes cluster (local minikube or remote)
-Ansible: For automation (Python 3.8+)
-Running Frontend Locally
+├── MusicBackend-main/                 # Spring Boot Backend
+│   └── MusicBackend-main/
+│       ├── pom.xml
+│       ├── src/
+│       └── mvnw.cmd
+│
+├── TuneUp-frontEnd-main/              # React + Vite Frontend
+│   └── TuneUp-frontEnd-main/
+│       ├── package.json
+│       ├── vite.config.js
+│       ├── Dockerfile
+│       └── src/
+
+🚀 Part 1: Local Development Setup
+✅ Prerequisites
+
+Backend
+
+Java 17+
+
+Maven (or Maven Wrapper mvnw)
+
+Frontend
+
+Node.js 18+
+
+npm
+
+Optional / Deployment
+
+Docker & Docker Desktop
+
+Kubernetes (kubectl, Minikube or Docker Desktop)
+
+Python 3.8+
+
+Ansible
+
+🖥️ Running Frontend Locally
 cd TuneUp-frontEnd-main/TuneUp-frontEnd-main
 
 # Install dependencies
 npm install
 
-# Start development server (port 5173)
+# Start dev server
 npm run dev
 
 # Build for production
@@ -35,26 +61,35 @@ npm run build
 
 # Preview production build
 npm preview
-Frontend runs at: \http://localhost:5173\
 
-Running Backend Locally
+
+📍 Frontend URL:
+http://localhost:5173
+
+⚙️ Running Backend Locally
 cd MusicBackend-main/MusicBackend-main
 
-# Build with Maven wrapper
+# Build project
 ./mvnw.cmd clean install
 
-# Run Spring Boot application (port 8080)
+# Run Spring Boot app
 ./mvnw.cmd spring-boot:run
 
-# Or run the JAR directly after build
+
+Or run the JAR directly:
+
 java -jar target/demo-0.0.1-SNAPSHOT.jar
-Backend runs at: \http://localhost:8080\
 
-Part 2: Docker Compose Deployment
-Running with Docker Compose
-Create \docker-compose.yml\ in the root directory, then:
 
-# Build and start all services
+📍 Backend URL:
+http://localhost:8080
+
+🐳 Part 2: Docker Compose Deployment
+▶️ Run with Docker Compose
+
+Create a docker-compose.yml in the root directory, then:
+
+# Start all services
 docker-compose up -d
 
 # View logs
@@ -65,100 +100,89 @@ docker-compose down
 
 # Remove volumes
 docker-compose down -v
-Access:
 
-Frontend: \http://localhost:3000\
-Backend: \http://localhost:8080\
-MySQL: \localhost:3306\
-Part 3: Kubernetes Deployment
-Prerequisites
-# Start minikube (local Kubernetes)
+🔗 Access Services
+
+Frontend: http://localhost:3000
+
+Backend: http://localhost:8080
+
+MySQL: localhost:3306
+
+☸️ Part 3: Kubernetes Deployment
+🔧 Prerequisites
+# Start Minikube
 minikube start --cpus=4 --memory=8192
 
-# Or use Docker Desktop Kubernetes
-# Enable in Docker Desktop Settings > Kubernetes
-Quick Kubernetes Deploy
-# Build images for Kubernetes
+
+Or enable Kubernetes in Docker Desktop.
+
+🚀 Quick Kubernetes Deploy
+Build Docker Images
+# Backend
 cd MusicBackend-main/MusicBackend-main
 docker build -t music-backend:latest .
 cd ../../
 
+# Frontend
 cd TuneUp-frontEnd-main/TuneUp-frontEnd-main
 docker build -t music-frontend:latest .
 cd ../../
 
-# If using minikube, load images
+Load Images into Minikube
 minikube image load music-backend:latest
 minikube image load music-frontend:latest
 
-# Deploy all services
+Deploy to Kubernetes
 kubectl apply -f k8s/
 
-# Check deployment status
+Check Status
 kubectl get pods -n music-app
 kubectl get svc -n music-app
 
-# Port forward for access
+Port Forwarding
 kubectl port-forward -n music-app svc/frontend-service 3000:3000 &
 kubectl port-forward -n music-app svc/backend-service 8080:8080 &
-Part 4: Ansible Automation Deployment
-Installation
-# Install Ansible
-pip install ansible
 
-# Install required collections
+🤖 Part 4: Ansible Automation Deployment
+📦 Installation
+pip install ansible
 ansible-galaxy collection install community.general community.kubernetes
-Run Automated Deployment
-# Full automated deployment
+
+▶️ Run Automated Deployment
 ansible-playbook -i ansible/hosts.ini ansible/deploy.yml
 
-# Verbose output
+
+Verbose mode (debugging):
+
 ansible-playbook -i ansible/hosts.ini ansible/deploy.yml -vvv
-Quick Start Commands
-1. Local Development (Fastest)
-# Terminal 1: Frontend
+
+⚡ Quick Start Commands
+1️⃣ Local Development (Fastest)
+
+Frontend
+
 cd TuneUp-frontEnd-main/TuneUp-frontEnd-main
 npm install && npm run dev
 
-# Terminal 2: Backend
+
+Backend
+
 cd MusicBackend-main/MusicBackend-main
 ./mvnw.cmd spring-boot:run
 
-# Access: 
-#   Frontend: http://localhost:5173
-#   Backend: http://localhost:8080
-2. Docker Compose (Simple)
+
+Frontend: http://localhost:5173
+
+Backend: http://localhost:8080
+
+2️⃣ Docker Compose (Simple)
 docker-compose up -d
 
-# Access: 
-#   Frontend: http://localhost:3000
-#   Backend: http://localhost:8080
-3. Kubernetes (Production)
-# See Part 3 above
+
+Frontend: http://localhost:3000
+
+Backend: http://localhost:8080
+
+3️⃣ Kubernetes (Production)
 ansible-playbook -i ansible/hosts.ini ansible/deploy.yml
-Troubleshooting
-Frontend Issues
-# Port 5173 already in use
-npm run dev -- --port 5174
-
-# Clear cache
-Remove-Item -Recurse node_modules
-npm install
-Backend Issues
-# Build cache issues
-./mvnw.cmd clean install -U
-
-# Run with more memory
-java -Xmx1024m -jar target/demo-0.0.1-SNAPSHOT.jar
-Kubernetes Issues
-# Check pod status
-kubectl get pods -n music-app -o wide
-
-# View logs
-kubectl logs -f deployment/music-backend -n music-app
-kubectl logs -f deployment/music-frontend -n music-app
-
-# Delete and redeploy
-kubectl delete namespace music-app
-kubectl apply -f k8s/
-Last Updated: November 28, 2025 Version: 1.0.0
