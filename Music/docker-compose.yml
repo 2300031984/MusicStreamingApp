@@ -1,0 +1,82 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: music-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: Saivarun@123
+      MYSQL_DATABASE: music
+      MYSQL_USER: musicuser
+      MYSQL_PASSWORD: musicpass
+    ports:
+      - "3307:3306"  # Changed external port to 3307 to avoid conflict with local MySQL
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d  # Mount initialization scripts
+    networks:
+      - music-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pSaivarun@123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./MusicBackend-main/MusicBackend-main
+      dockerfile: Dockerfile
+    container_name: music-backend
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/music?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Saivarun@123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8084
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: tuneupcontakt@gmail.com
+      SPRING_MAIL_PASSWORD: izxl eawx havp cafu
+    ports:
+      - "8085:8084"  # Changed external port to 8085 to avoid conflict with local backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - music-network
+    volumes:
+      - ./MusicBackend-main/MusicBackend-main/src/main/resources/static/songs:/app/static/songs
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:8084/user/1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./TuneUp-frontEnd-main/TuneUp-frontEnd-main
+      dockerfile: Dockerfile
+      args:
+        VITE_BASE_API_URL: http://localhost:8085
+        VITE_BASE_PATH: /
+    container_name: music-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - music-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  music-network:
+    driver: bridge
+

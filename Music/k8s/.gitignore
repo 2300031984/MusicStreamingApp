@@ -1,0 +1,7 @@
+# Kubernetes secrets (should not be committed)
+# secrets.yaml
+
+# Temporary files
+*.tmp
+*.bak
+

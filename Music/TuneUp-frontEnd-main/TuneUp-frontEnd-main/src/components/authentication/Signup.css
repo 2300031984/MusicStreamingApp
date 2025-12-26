@@ -1,0 +1,154 @@
+/* General Layout */
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #121212; /* Darker shade for strong contrast */
+  padding: 20px;
+}
+
+.signup-box {
+  background: rgba(24, 24, 24, 0.85); /* Slightly lighter dark tone */
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5); /* More depth */
+  transition: transform 0.3s ease;
+}
+
+
+.signup-box:hover {
+  transform: scale(1.02);
+}
+
+/* Title */
+.signup-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ddd;
+}
+
+.signup-subtitle {
+  color: #ddd;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Input Fields */
+.input-field {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: background 0.3s ease;
+}
+
+.input-field:focus {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Signup Button */
+.signup-button {
+  width: 100%;
+  padding: 12px;
+  background: #ffcc00;
+  color: black;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.signup-button:hover {
+  background: #ffd633;
+}
+
+/* Divider */
+.divider {
+  margin: 20px 0;
+  font-size: 14px;
+  color: #ccc;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: #666;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+/* Social Login Buttons */
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.social-button {
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.social-button.google {
+  background: #db4437;
+}
+
+.social-button.apple {
+  background: #333;
+}
+
+.social-button.facebook {
+  background: #3b5998;
+}
+
+.social-button:hover {
+  transform: scale(1.1);
+}
+
+/* Login Link */
+.login-link {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #bbb;
+}
+
+.login-link span {
+  color: #00aaff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.login-link span:hover {
+  text-decoration: underline;
+}
